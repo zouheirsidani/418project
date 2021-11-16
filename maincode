@@ -1,0 +1,93 @@
+import os
+# import tensorflow as tf
+# from tensorflow.keras import datasets, layers, models
+from PIL import Image
+import matplotlib.pyplot as plt
+import numpy as np
+
+def load_data(path_training_folder,path_testing_folder):
+    X_train, X_test, y_train, y_test = 0,0,0,0
+    L = 400
+    for root, dirs, files in os.walk(path_training_folder):
+        str1 = path_training_folder+files[0]
+        img = Image.open(str1)
+        new_img = img.resize((L, L))
+        grey_img = new_img.convert('L')
+        X_train = np.array(grey_img)
+        X_train = np.expand_dims(X_train, axis=0)
+        y_train = np.empty((len(files),1))
+        if files[0][0:3]=="cir":
+            y_train=np.array([0])
+            y_train = np.expand_dims(y_train, axis=0)
+        elif files[0][0:3]=="squ":
+            y_train=np.array([1])
+            y_train = np.expand_dims(y_train, axis=0)
+        else:
+            y_train=np.array([2])
+            y_train = np.expand_dims(y_train, axis=0)
+        initialized = True
+        for file in files:
+            if initialized:
+                initialized = False
+            else:
+                if file[0:3]=="cir":
+                    y=np.array([0])
+                    y = np.expand_dims(y, axis=0)
+                    y_train = np.append(y_train,y,axis=0)
+                elif file[0:3]=="squ":
+                    y=np.array([1])
+                    y = np.expand_dims(y, axis=0)
+                    y_train = np.append(y_train,y,axis=0)
+                else:
+                    y=np.array([2])
+                    y = np.expand_dims(y, axis=0)
+                    y_train = np.append(y_train,y,axis=0)
+                str1 = path_training_folder+file
+                img = Image.open(str1)
+                new_img = img.resize((L, L))
+                grey_img = new_img.convert('L')
+                arr = np.array(grey_img)
+                arr = np.expand_dims(arr, axis=0)
+                X_train = np.append(X_train,arr,axis=0)
+    for root, dirs, files in os.walk(path_testing_folder):
+        str1 = path_testing_folder+files[0]
+        img = Image.open(str1)
+        new_img = img.resize((L, L))
+        grey_img = new_img.convert('L')
+        X_test = np.array(grey_img)
+        X_test = np.expand_dims(X_test, axis=0)
+        y_test = np.empty((len(files),1))
+        if files[0][0:3]=="cir":
+            y_test=np.array([0])
+            y_test = np.expand_dims(y_test, axis=0)
+        elif files[0][0:3]=="squ":
+            y_test=np.array([1])
+            y_test = np.expand_dims(y_test, axis=0)
+        else:
+            y_test=np.array([2])
+            y_test = np.expand_dims(y_test, axis=0)
+        initialized = True
+        for file in files:
+            if initialized:
+                initialized = False
+            else:
+                if file[0:3]=="cir":
+                    y=np.array([0])
+                    y = np.expand_dims(y, axis=0)
+                    y_test = np.append(y_test,y,axis=0)
+                elif file[0:3]=="squ":
+                    y=np.array([1])
+                    y = np.expand_dims(y, axis=0)
+                    y_test = np.append(y_test,y,axis=0)
+                else:
+                    y=np.array([2])
+                    y = np.expand_dims(y, axis=0)
+                    y_test = np.append(y_test,y,axis=0)
+                str1 = path_testing_folder+file
+                img = Image.open(str1)
+                new_img = img.resize((L, L))
+                grey_img = new_img.convert('L')
+                arr = np.array(grey_img)
+                arr = np.expand_dims(arr, axis=0)
+                X_test = np.append(X_test,arr,axis=0)
+    return X_train, X_test, y_train, y_test
